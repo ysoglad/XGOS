@@ -9,5 +9,4 @@ public class XgosApplication {
     public static void main(String[] args) {
         SpringApplication.run(XgosApplication.class, args);
     }
-
 }

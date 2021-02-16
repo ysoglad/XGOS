@@ -3,29 +3,29 @@ package com.app.XGOS.sqlRepository;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "wishes")
-public class Wish {
+@Table(name = "ordersPrivateData")
+public class OrderPrivateData {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
 
-    @OneToOne(mappedBy = "wish", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "orderPrivateData", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
-    private PresentOrder presentOrder;
+    private OrderPublicData orderPublicData;
 
     String childName;
     String childSurname;
     String text;
 
-    public Wish(String childName, String childSurname, String text) {
+    public OrderPrivateData(String childName, String childSurname, String text) {
         this.childName = childName;
         this.childSurname = childSurname;
         this.text = text;
     }
 
-    public Wish() {
+    public OrderPrivateData() {
     }
 
     public Long getId() {
@@ -36,12 +36,12 @@ public class Wish {
         this.id = id;
     }
 
-    public PresentOrder getOrder() {
-        return presentOrder;
+    public OrderPublicData getOrderPublicData() {
+        return orderPublicData;
     }
 
-    public void setOrder(PresentOrder presentOrder) {
-        this.presentOrder = presentOrder;
+    public void setOrderPublicData(OrderPublicData orderPublicData) {
+        this.orderPublicData = orderPublicData;
     }
 
     public String getChildName() {

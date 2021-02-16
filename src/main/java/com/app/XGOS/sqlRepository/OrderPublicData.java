@@ -1,30 +1,28 @@
 package com.app.XGOS.sqlRepository;
 
-import com.app.XGOS.sqlRepository.Wish;
-
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "presentOrder")
-public class PresentOrder {
+@Table(name = "ordersPublicData")
+public class OrderPublicData {
 
     @Id
-    @Column(name = "wish_id")
+    @Column(name = "orderPrivateData_id")
     private Long id;
 
     @OneToOne
     @MapsId
-    @JoinColumn(name = "wish_id")
-    private Wish wish;
+    @JoinColumn(name = "orderPrivateData_id")
+    private OrderPrivateData orderPrivateData;
 
     private LocalDate date;
 
-    public PresentOrder(LocalDate date) {
+    public OrderPublicData(LocalDate date) {
         this.date = date;
     }
 
-    public PresentOrder() {
+    public OrderPublicData() {
     }
 
     public Long getId() {
@@ -35,12 +33,12 @@ public class PresentOrder {
         this.id = id;
     }
 
-    public Wish getWish() {
-        return wish;
+    public OrderPrivateData getOrderPrivateData() {
+        return orderPrivateData;
     }
 
-    public void setWish(Wish wish) {
-        this.wish = wish;
+    public void setOrderPrivateData(OrderPrivateData orderPrivateData) {
+        this.orderPrivateData = orderPrivateData;
     }
 
     public LocalDate getDate() {
