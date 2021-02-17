@@ -1,7 +1,6 @@
-# Deploy
 Program requires the following cmd line parameter to run properly.
 ```wishSourceFilePathname```
-Single, first entry is used.
+Single value, first entry is used.
 
 At the moment wishes within xml should be supplied with the following date format
 'dd/MM/yyyy'. Otherwise, the date of the processing will be assigned.
@@ -13,4 +12,11 @@ Example windows PShell run:
 ```
 .\\mvnw.cmd spring-boot:run -D"spring-boot.run.arguments=--wishSourceFilePathname=C:\\pathToFileWithWishes.xml"
 ```
+By default, application operates on in memory h2 db, to achieve persistence across multiple runs please override the
 
+```spring.datasource.url``` parameter. Example:
+```
+.\\mvnw.cmd spring-boot:run -D"spring-boot.run.arguments=--wishSourceFilePathname=C:\\wish2.xml --spring.datasource.url=jdbc:h2:file:C:/data/sample"
+```
+
+Db credentials can be found in application.properties file.

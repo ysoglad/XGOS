@@ -58,8 +58,7 @@ public class SchedulerService {
         }
     }
 
-    //    @Scheduled(cron = "0 0 2 * * *", zone = "UTC")
-    @Scheduled(cron = "* * * * * *", zone = "UTC")
+    @Scheduled(cron = "0 0 2 * * *", zone = "UTC")
     void updateWishesAndOrdersDatabase() {
         try {
             iWishIterativeProvider.initFromNewSource(wishFileUri);
