@@ -63,7 +63,7 @@ public class SchedulerService {
         try {
             iWishIterativeProvider.initFromNewSource(wishFileUri);
             while (iWishIterativeProvider.isMoreDataAvailable()) {
-                attemptSaveWishesToDb(iWishIterativeProvider.getUpToNWishes(numberOfWishesToParse)
+                saveWishesToDb(iWishIterativeProvider.getUpToNWishes(numberOfWishesToParse)
                         .stream()
                         .map(wishToOrderConverter::getOrder)
                         .collect(Collectors.toList()));
@@ -74,14 +74,9 @@ public class SchedulerService {
         }
     }
 
-    @Transactional
     private void saveWishesToDb(Collection<OrderPrivateData> opdCollection) {
-        wishDataRepository.saveAll(opdCollection);
-    }
-
-    private void attemptSaveWishesToDb(Collection<OrderPrivateData> opdCollection) {
         opdCollection.removeIf(Objects::isNull);
         if (null != opdCollection && !opdCollection.isEmpty())
-            saveWishesToDb(opdCollection);
+            wishDataRepository.saveAll(opdCollection);
     }
 }
