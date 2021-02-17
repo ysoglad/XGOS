@@ -13,9 +13,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.io.File;
 import java.net.URI;
+import java.nio.file.Paths;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,7 +25,7 @@ public class SchedulerService {
     private final IWishIterativeProvider iWishIterativeProvider;
     private final WishDataRepository wishDataRepository;
     private final WishToOrderConverter wishToOrderConverter;
-    private String wishSourceFilePathname;
+    private URI wishFileUri;
 
     @Value("${wish.src.path.param.name}")
     private String wishListArgName;
@@ -46,26 +47,22 @@ public class SchedulerService {
     @Autowired
     public void setWishSourceFilePathname(ApplicationArguments args) {
         if (args.containsOption(wishListArgName)) {
-            wishSourceFilePathname = args.getOptionValues(wishListArgName).get(0);
+            String wishSourceFilePathname = args.getOptionValues(wishListArgName).get(0);
+            try {
+                wishFileUri = Paths.get(wishSourceFilePathname).toAbsolutePath().toUri();
+            } catch (java.nio.file.InvalidPathException e) {
+                System.err.println("Invalid path provided. Please ReadMe!");
+            }
         } else {
             System.err.println("'wishSourceFilePathname' parameter not provided. Please ReadMe!");
         }
     }
 
-
-    @Scheduled(cron = "0 0 2 * * *", zone = "UTC")
+    //    @Scheduled(cron = "0 0 2 * * *", zone = "UTC")
+    @Scheduled(cron = "* * * * * *", zone = "UTC")
     void updateWishesAndOrdersDatabase() {
-        File inputWishFile = new File(wishSourceFilePathname);
-        if (!inputWishFile.isFile()) {
-            System.out.println("PSEUDO LOG: file not present at location '" + wishSourceFilePathname + "' at time XYZ");
-            return;
-        }
-        parseAndUpdate(inputWishFile.toURI());
-    }
-
-    private void parseAndUpdate(URI uri) {
         try {
-            iWishIterativeProvider.initFromNewSource(uri);
+            iWishIterativeProvider.initFromNewSource(wishFileUri);
             while (iWishIterativeProvider.isMoreDataAvailable()) {
                 saveWishedToDb(iWishIterativeProvider.getUpToNWishes(numberOfWishesToParse)
                         .stream()
@@ -73,12 +70,15 @@ public class SchedulerService {
                         .collect(Collectors.toList()));
             }
         } catch (WishProviderException wishProviderException) {
+            //TODO provide exception handler
             System.out.println("PSEUDO LOG: wishProviderException" + wishProviderException.getMessage());
         }
     }
 
     @Transactional
     private void saveWishedToDb(Collection<OrderPrivateData> opdCollection) {
-        wishDataRepository.saveAll(opdCollection);
+        opdCollection.removeIf(Objects::isNull);
+        if (null != opdCollection && !opdCollection.isEmpty())
+            wishDataRepository.saveAll(opdCollection);
     }
 }

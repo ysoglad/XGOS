@@ -35,7 +35,7 @@ public class FromXmlWishIterativeProvider implements IWishIterativeProvider {
 
     private void checkIfUriIsAnExistingXmlFile(URI uri) throws WishProviderException {
         try {
-            if (!new File(uri).isFile()) {
+            if (null == uri || !new File(uri).isFile()) {
                 throw new WishProviderException("File does not exist");
             }
         } catch (IllegalArgumentException iae) {
@@ -101,7 +101,6 @@ public class FromXmlWishIterativeProvider implements IWishIterativeProvider {
                     }
                 }
             }
-
 
             if (wishes.size() == maxNumberToRead) break;
         }
