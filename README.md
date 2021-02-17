@@ -20,3 +20,26 @@ By default, application operates on in memory h2 db, to achieve persistence acro
 ```
 
 Db credentials can be found in application.properties file.
+
+Xml structure example:
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<wishes>
+    <wish>
+        <child>
+			<name>Jane</name>
+			<surname>Doe</surname>
+		</child>
+        <text>I wish for a teddy.</text>
+        <datetime>12/11/2021</datetime>
+    </wish>
+    <wish>
+        <child>
+			<name>Jhon</name>
+			<surname>Doe</surname>
+		</child>
+        <text>I wish for a car.</text>
+        <datetime>11/11/2021</datetime>
+    </wish>
+</wishes>
+```
